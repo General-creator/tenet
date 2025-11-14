@@ -35,3 +35,26 @@ export async function listUsageForOrg(
   const { data, error } = await query.order('period_start', { ascending: false })
   return ensureData({ data, error })
 }
+
+export async function listUsageInRange(
+  client: TenetSupabaseClient,
+  orgId: string,
+  options: { hubId?: string; periodStart?: string; periodEnd?: string },
+): Promise<UsageRecordRow[]> {
+  let query = client.from('usage_records').select('*').eq('org_id', orgId)
+
+  if (options.hubId) {
+    query = query.eq('hub_id', options.hubId)
+  }
+
+  if (options.periodStart) {
+    query = query.gte('period_start', options.periodStart)
+  }
+
+  if (options.periodEnd) {
+    query = query.lte('period_end', options.periodEnd)
+  }
+
+  const { data, error } = await query.order('period_start', { ascending: true })
+  return ensureData({ data, error })
+}

@@ -44,3 +44,23 @@ export async function listMemoryRecords(
   const { data, error } = await query.order('created_at', { ascending: false })
   return ensureData({ data, error })
 }
+
+export async function searchMemoryRecords(
+  client: TenetSupabaseClient,
+  orgId: string,
+  options: { hubId?: string; query?: string },
+): Promise<MemoryRecordRow[]> {
+  let queryBuilder = client.from('memory_records').select('*').eq('org_id', orgId)
+
+  if (options.hubId) {
+    queryBuilder = queryBuilder.eq('hub_id', options.hubId)
+  }
+
+  if (options.query) {
+    const term = `%${options.query}%`
+    queryBuilder = queryBuilder.ilike('content', term)
+  }
+
+  const { data, error } = await queryBuilder.order('created_at', { ascending: false }).limit(50)
+  return ensureData({ data, error })
+}

@@ -16,8 +16,11 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
+      "@tenet/core": ["packages/core/src"],
       "@tenet/core/*": ["packages/core/src/*"],
+      "@tenet/ui": ["packages/ui/src"],
       "@tenet/ui/*": ["packages/ui/src/*"],
+      "@tenet/types": ["packages/types/src"],
       "@tenet/types/*": ["packages/types/src/*"],
       "@tests/*": ["tests/*"]
     }

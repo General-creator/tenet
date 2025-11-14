@@ -32,3 +32,17 @@ export async function listGraphEdges(
   const { data, error } = await client.from('graph_edges').select('*').eq('org_id', orgId)
   return ensureData({ data, error })
 }
+
+export async function listEdgesForNode(
+  client: TenetSupabaseClient,
+  orgId: string,
+  nodeId: string,
+): Promise<GraphEdgeRow[]> {
+  const { data, error } = await client
+    .from('graph_edges')
+    .select('*')
+    .eq('org_id', orgId)
+    .or(`from_node_id.eq.${nodeId},to_node_id.eq.${nodeId}`)
+
+  return ensureData({ data, error })
+}

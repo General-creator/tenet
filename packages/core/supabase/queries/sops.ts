@@ -1,9 +1,11 @@
-import type { Tables } from '@tenet/types'
+import type { Tables, TablesInsert, TablesUpdate } from '@tenet/types'
 
 import type { TenetSupabaseClient } from '../client'
 import { ensureData, ensureMaybeSingle } from './utils'
 
 export type SopRow = Tables<'sops'>
+export type SopInsert = TablesInsert<'sops'>
+export type SopUpdate = TablesUpdate<'sops'>
 
 export async function listSopsForOrg(
   client: TenetSupabaseClient,
@@ -35,4 +37,50 @@ export async function getSopByKey(
 
   const { data, error } = await query.maybeSingle()
   return ensureMaybeSingle({ data, error })
+}
+
+export async function getSopById(
+  client: TenetSupabaseClient,
+  orgId: string,
+  sopId: string,
+): Promise<SopRow | null> {
+  const { data, error } = await client
+    .from('sops')
+    .select('*')
+    .eq('org_id', orgId)
+    .eq('id', sopId)
+    .maybeSingle()
+
+  return ensureMaybeSingle({ data, error })
+}
+
+export async function createSop(
+  client: TenetSupabaseClient,
+  orgId: string,
+  payload: Omit<SopInsert, 'org_id'>,
+): Promise<SopRow> {
+  const insertPayload: SopInsert = {
+    ...payload,
+    org_id: orgId,
+  }
+
+  const { data, error } = await client.from('sops').insert(insertPayload).select().single()
+  return ensureData({ data, error })
+}
+
+export async function updateSop(
+  client: TenetSupabaseClient,
+  orgId: string,
+  sopId: string,
+  changes: Omit<SopUpdate, 'org_id'>,
+): Promise<SopRow> {
+  const { data, error } = await client
+    .from('sops')
+    .update(changes)
+    .eq('org_id', orgId)
+    .eq('id', sopId)
+    .select()
+    .single()
+
+  return ensureData({ data, error })
 }
