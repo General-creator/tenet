@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --tenet-background: #f8f9fa;
+  --tenet-foreground: #212529;
+  --tenet-border: #dee2e6;
+  --tenet-muted: #adb5bd;
+  --tenet-accent: #3a7afe;
+  --tenet-accent-foreground: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--tenet-foreground);
+  background-color: var(--tenet-background);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: rgba(58, 122, 254, 0.3);
+  color: #0b1320;
+}

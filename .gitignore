@@ -1,1 +1,19 @@
+# Environment files
 .env.local
+
+# Node.js
+node_modules
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Next.js
+.next
+out
+
+# Build artifacts
+coverage
+dist
+
+# Misc
+.DS_Store
