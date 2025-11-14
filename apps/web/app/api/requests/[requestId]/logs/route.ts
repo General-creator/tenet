@@ -1,11 +1,11 @@
+import { listExecutionLogsForRequest } from '@tenet/core/supabase/queries/executionLogs'
+import { getTenetRequestById } from '@tenet/core/supabase/queries/tenetRequests'
 import { NextRequest } from 'next/server'
 
 import { getRequestContext } from '@/app/api/_lib/context'
 import { ApiError, handleRouteError } from '@/app/api/_lib/errors'
 import { serializeLogs } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { getTenetRequestById } from '@tenet/core/supabase/queries/tenetRequests'
-import { listExecutionLogsForRequest } from '@tenet/core/supabase/queries/executionLogs'
 
 interface RouteParams {
   params: {

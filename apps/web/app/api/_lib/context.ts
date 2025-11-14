@@ -1,8 +1,8 @@
 import { Buffer } from 'node:buffer'
 
+import { createSupabaseClient, type TenetSupabaseClient } from '@tenet/core/supabase/client'
 import type { NextRequest } from 'next/server'
 
-import { createSupabaseClient, type TenetSupabaseClient } from '@tenet/core/supabase/client'
 
 import { ApiError } from './errors'
 

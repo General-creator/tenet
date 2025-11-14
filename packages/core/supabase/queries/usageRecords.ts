@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert } from '@tenet/types'
 
 import type { TenetSupabaseClient } from '../client'
+
 import { ensureData } from './utils'
 
 export type UsageRecordRow = Tables<'usage_records'>

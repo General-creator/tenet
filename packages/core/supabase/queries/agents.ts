@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert } from '@tenet/types'
 
 import type { TenetSupabaseClient } from '../client'
+
 import { ensureData, ensureMaybeSingle } from './utils'
 
 export type AgentRow = Tables<'agents'>

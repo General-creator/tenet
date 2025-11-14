@@ -1,5 +1,4 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-
 import type { Database } from '@tenet/types'
 
 export type TenetSupabaseClient = SupabaseClient<Database>

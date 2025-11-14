@@ -1,3 +1,5 @@
+import { getSopById, updateSop } from '@tenet/core/supabase/queries/sops'
+import type { SopUpdate } from '@tenet/core/supabase/queries/sops'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 
@@ -5,8 +7,6 @@ import { getRequestContext } from '@/app/api/_lib/context'
 import { ApiError, handleRouteError } from '@/app/api/_lib/errors'
 import { serializeSop } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { getSopById, updateSop } from '@tenet/core/supabase/queries/sops'
-import type { SopUpdate } from '@tenet/core/supabase/queries/sops'
 
 const updateSchema = z
   .object({

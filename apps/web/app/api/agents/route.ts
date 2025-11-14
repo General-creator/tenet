@@ -1,3 +1,5 @@
+import { createAgent, listAgentsForHub, listAgentsForOrg } from '@tenet/core/supabase/queries/agents'
+import { getHubByKey } from '@tenet/core/supabase/queries/hubs'
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 
@@ -5,8 +7,6 @@ import { getRequestContext } from '@/app/api/_lib/context'
 import { ApiError, handleRouteError } from '@/app/api/_lib/errors'
 import { serializeAgent } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { getHubByKey } from '@tenet/core/supabase/queries/hubs'
-import { createAgent, listAgentsForHub, listAgentsForOrg } from '@tenet/core/supabase/queries/agents'
 
 const createAgentSchema = z.object({
   hubKey: z.string().min(1),

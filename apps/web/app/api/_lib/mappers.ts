@@ -1,7 +1,5 @@
 import type { Tables } from '@tenet/types'
 
-import type { ClassifiedIntent } from './intent'
-
 type TenetRequestRow = Tables<'tenet_requests'>
 type RoutingDecisionRow = Tables<'routing_decisions'>
 type ExecutionLogRow = Tables<'execution_logs'>
@@ -12,7 +10,120 @@ type GraphNodeRow = Tables<'graph_nodes'>
 type GraphEdgeRow = Tables<'graph_edges'>
 type MemoryRecordRow = Tables<'memory_records'>
 
-export function serializeRequest(row: TenetRequestRow) {
+export interface SerializedRequest {
+  id: string
+  hubId?: string
+  userId?: string
+  rawInput: string
+  intent?: string
+  sopKey?: string
+  priority: TenetRequestRow['priority']
+  status: TenetRequestRow['status']
+  metadata: unknown
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SerializedRoutingDecision {
+  id: string
+  requestId: string
+  hubId?: string
+  sopId?: string
+  agentId?: string
+  modelName?: string
+  qosTier?: RoutingDecisionRow['qos_tier']
+  estimatedCost?: number
+  estimatedTokens?: number
+  estimatedLatencyMs?: number
+  decisionPayload: unknown
+  createdAt: string
+}
+
+export interface SerializedExecutionLog {
+  id: string
+  stepName?: string
+  status: ExecutionLogRow['status']
+  detail?: string
+  payload: unknown
+  tokensUsed?: number
+  latencyMs?: number
+  timestamp: string
+}
+
+export interface SerializedSop {
+  id: string
+  hubId?: string
+  sopKey: string
+  name: string
+  description?: string
+  version: number
+  isActive: boolean
+  definition: unknown
+  createdBy?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SerializedAgent {
+  id: string
+  hubId?: string
+  agentKey: string
+  name: string
+  description?: string
+  specialization?: string
+  skills: string[]
+  memoryProfile?: string
+  maxTokens?: number
+  config: unknown
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SerializedHub {
+  id: string
+  key: string
+  name: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SerializedGraphNode {
+  id: string
+  hubId?: string
+  nodeKey: string
+  nodeType: string
+  label?: string
+  metadata: unknown
+  createdAt: string
+  updatedAt: string
+}
+
+export interface SerializedGraphEdge {
+  id: string
+  fromNodeId: string
+  toNodeId: string
+  relationType: string
+  weight?: number
+  metadata: unknown
+  createdAt: string
+}
+
+export interface SerializedMemoryRecord {
+  id: string
+  hubId?: string
+  agentId?: string
+  sopId?: string
+  userId?: string
+  scope: MemoryRecordRow['scope']
+  entityKey?: string
+  content: string
+  metadata: unknown
+  createdAt: string
+}
+
+export function serializeRequest(row: TenetRequestRow): SerializedRequest {
   return {
     id: row.id,
     hubId: row.hub_id ?? undefined,
@@ -28,7 +139,9 @@ export function serializeRequest(row: TenetRequestRow) {
   }
 }
 
-export function serializeRoutingDecision(row: RoutingDecisionRow | null | undefined) {
+export function serializeRoutingDecision(
+  row: RoutingDecisionRow | null | undefined,
+): SerializedRoutingDecision | undefined {
   if (!row) {
     return undefined
   }
@@ -49,7 +162,7 @@ export function serializeRoutingDecision(row: RoutingDecisionRow | null | undefi
   }
 }
 
-export function serializeLogs(logs: ExecutionLogRow[]) {
+export function serializeLogs(logs: ExecutionLogRow[]): SerializedExecutionLog[] {
   return logs.map((log) => ({
     id: log.id,
     stepName: log.step_name ?? undefined,
@@ -62,7 +175,7 @@ export function serializeLogs(logs: ExecutionLogRow[]) {
   }))
 }
 
-export function serializeSop(row: SopRow) {
+export function serializeSop(row: SopRow): SerializedSop {
   return {
     id: row.id,
     hubId: row.hub_id ?? undefined,
@@ -78,7 +191,7 @@ export function serializeSop(row: SopRow) {
   }
 }
 
-export function serializeAgent(row: AgentRow) {
+export function serializeAgent(row: AgentRow): SerializedAgent {
   return {
     id: row.id,
     hubId: row.hub_id ?? undefined,
@@ -96,7 +209,7 @@ export function serializeAgent(row: AgentRow) {
   }
 }
 
-export function serializeHub(row: HubRow) {
+export function serializeHub(row: HubRow): SerializedHub {
   return {
     id: row.id,
     key: row.key,
@@ -107,7 +220,7 @@ export function serializeHub(row: HubRow) {
   }
 }
 
-export function serializeGraphNode(row: GraphNodeRow) {
+export function serializeGraphNode(row: GraphNodeRow): SerializedGraphNode {
   return {
     id: row.id,
     hubId: row.hub_id ?? undefined,
@@ -120,7 +233,7 @@ export function serializeGraphNode(row: GraphNodeRow) {
   }
 }
 
-export function serializeGraphEdges(edges: GraphEdgeRow[]) {
+export function serializeGraphEdges(edges: GraphEdgeRow[]): SerializedGraphEdge[] {
   return edges.map((edge) => ({
     id: edge.id,
     fromNodeId: edge.from_node_id,
@@ -132,7 +245,7 @@ export function serializeGraphEdges(edges: GraphEdgeRow[]) {
   }))
 }
 
-export function serializeMemoryRecord(row: MemoryRecordRow) {
+export function serializeMemoryRecord(row: MemoryRecordRow): SerializedMemoryRecord {
   return {
     id: row.id,
     hubId: row.hub_id ?? undefined,
@@ -144,25 +257,5 @@ export function serializeMemoryRecord(row: MemoryRecordRow) {
     content: row.content,
     metadata: row.metadata ?? {},
     createdAt: row.created_at,
-  }
-}
-
-export function buildRoutingStub(intent: ClassifiedIntent, overrides?: Partial<ReturnType<typeof serializeRoutingDecision>>) {
-  return {
-    id: overrides?.id ?? crypto.randomUUID(),
-    requestId: overrides?.requestId ?? crypto.randomUUID(),
-    hubId: overrides?.hubId,
-    sopId: overrides?.sopId,
-    agentId: overrides?.agentId,
-    modelName: overrides?.modelName ?? 'gpt-5.1',
-    qosTier: overrides?.qosTier ?? 'silver',
-    estimatedCost: overrides?.estimatedCost ?? 0.004,
-    estimatedTokens: overrides?.estimatedTokens ?? 600,
-    estimatedLatencyMs: overrides?.estimatedLatencyMs ?? 1200,
-    decisionPayload: {
-      intent,
-      ...(overrides?.decisionPayload ?? {}),
-    },
-    createdAt: overrides?.createdAt ?? new Date().toISOString(),
   }
 }

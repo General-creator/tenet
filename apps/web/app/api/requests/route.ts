@@ -1,10 +1,10 @@
+import { listRecentRequests } from '@tenet/core/supabase/queries/tenetRequests'
 import { NextRequest } from 'next/server'
 
 import { getRequestContext } from '@/app/api/_lib/context'
 import { handleRouteError } from '@/app/api/_lib/errors'
 import { serializeRequest } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { listRecentRequests } from '@tenet/core/supabase/queries/tenetRequests'
 
 export async function GET(req: NextRequest): Promise<Response> {
   try {

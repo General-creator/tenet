@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert } from '@tenet/types'
 
 import type { TenetSupabaseClient } from '../client'
+
 import { ensureData, ensureMaybeSingle } from './utils'
 
 export type TenetRequestRow = Tables<'tenet_requests'>
@@ -51,6 +52,26 @@ export async function listRecentRequests(
     .eq('org_id', orgId)
     .order('created_at', { ascending: false })
     .limit(limit)
+
+  return ensureData({ data, error })
+}
+
+export async function updateTenetRequestStatus(
+  client: TenetSupabaseClient,
+  orgId: string,
+  requestId: string,
+  status: TenetRequestRow['status'],
+): Promise<TenetRequestRow> {
+  const { data, error } = await client
+    .from('tenet_requests')
+    .update({
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('org_id', orgId)
+    .eq('id', requestId)
+    .select()
+    .single()
 
   return ensureData({ data, error })
 }

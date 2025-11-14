@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert } from '@tenet/types'
 
 import type { TenetSupabaseClient } from '../client'
+
 import { ensureData } from './utils'
 
 export type RoutingDecisionRow = Tables<'routing_decisions'>

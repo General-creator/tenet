@@ -1,11 +1,11 @@
+import { listGraphNodes } from '@tenet/core/supabase/queries/graphNodes'
+import { getHubByKey } from '@tenet/core/supabase/queries/hubs'
 import { NextRequest } from 'next/server'
 
 import { getRequestContext } from '@/app/api/_lib/context'
 import { ApiError, handleRouteError } from '@/app/api/_lib/errors'
 import { serializeGraphNode } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { getHubByKey } from '@tenet/core/supabase/queries/hubs'
-import { listGraphNodes } from '@tenet/core/supabase/queries/graphNodes'
 
 export async function GET(req: NextRequest): Promise<Response> {
   try {

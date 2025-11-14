@@ -1,11 +1,11 @@
+import { listEdgesForNode } from '@tenet/core/supabase/queries/graphEdges'
+import { getGraphNodeById, getGraphNodesByIds } from '@tenet/core/supabase/queries/graphNodes'
 import { NextRequest } from 'next/server'
 
 import { getRequestContext } from '@/app/api/_lib/context'
 import { ApiError, handleRouteError } from '@/app/api/_lib/errors'
 import { serializeGraphNode } from '@/app/api/_lib/mappers'
 import { jsonResponse } from '@/app/api/_lib/responses'
-import { getGraphNodeById, getGraphNodesByIds } from '@tenet/core/supabase/queries/graphNodes'
-import { listEdgesForNode } from '@tenet/core/supabase/queries/graphEdges'
 
 interface RouteParams {
   params: {
