@@ -6,3 +6,5 @@ export interface TenetEntity {
   createdAt: Date
   updatedAt: Date
 }
+
+export * from '../db'
